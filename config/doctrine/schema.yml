@@ -1,0 +1,103 @@
+OcTicket:
+  inheritance:
+    extends: Traceable
+    type: concrete
+  columns:
+    oc_transaction_id:
+      type: integer
+      notnull: true
+    price_id:
+      type: integer
+      notnull: true
+    gauge_id:
+      type: integer
+      notnull: true
+    rank:
+      type: integer
+      notnull: true
+      default: 1
+    accepted:
+      type: enum
+      values: [none, human, algorithm]
+      default: none
+  relations:
+    OcTransaction:
+      onDelete: CASCADE
+      onUpdate: CASCADE
+      foreignAlias: OcTickets
+    Price:
+      onDelete: CASCADE
+      onUpdate: CASCADE
+      foreignAlias: OcTickets
+    Price:
+      onDelete: CASCADE
+      onUpdate: CASCADE
+      foreignAlias: OcTickets
+OcTransaction:
+  inheritance:
+    extends: Traceable
+    type: concrete
+  columns:
+    oc_professional_id: integer
+    transaction_id: integer
+  relations:
+    OcProfessional:
+      onDelete: SET NULL
+      onUpdate: CASCADE
+      foreignAlias: OcTransactions
+    Transaction:
+      onDelete: SET NULL
+      onUpdate: CASCADE
+      foreignAlias: OcTransactions
+OcProfessional:
+  inheritance:
+    extends: Traceable
+    type: concrete
+  columns:
+    professional_id:
+      type: integer
+      notnull: true
+    rank:
+      type: integer
+      default: 1
+      notnull: true
+  relations:
+    Professional:
+      onDelete: CASCADE
+      onUpdate: CASCADE
+      foreignAlias: OcProfessionals
+OcConfig:
+  inheritance:
+    extends: Traceable
+    type: concrete
+  columns:
+    sf_guard_user_id:
+      type: integer
+      notnull: true
+      unique: true
+    group_id:
+      type: integer
+      notnull: true
+    workspace_id: integer
+  relations:
+    sfGuardUser:
+      foreignType: one
+      onDelete: CASCADE
+      onUpdate: CASCADE
+      foreignAlias: OcConfig
+    Group:
+      onDelete: CASCADE
+      onUpdate: CASCADE
+      foreignAlias: OcConfig
+OcTimeSlot:
+  inheritance:
+    extends: Traceable
+    type: concrete
+  columns:
+    starts_at:
+      type: datetime
+      notnull: true
+    ends_at:
+      type: datetime
+      notnull: true
+      
