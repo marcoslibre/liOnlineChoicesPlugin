@@ -10,7 +10,7 @@
  *
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
  */
-class apiCustomersActions extends apiActions
+class ocApiCustomersActions extends apiActions
 {
 
     /**

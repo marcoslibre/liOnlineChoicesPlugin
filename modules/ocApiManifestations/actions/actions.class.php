@@ -10,18 +10,8 @@
  *
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
  */
-class apiCustomerOrdersActions extends apiActions
+class ocApiManifestationsActions extends apiActions
 {
-
-    /**
-     * 
-     * @param sfWebRequest $request
-     * @return array
-     */
-    public function getOne(sfWebRequest $request)
-    {
-        return array('message' => __METHOD__);
-    }
 
     /**
      * 

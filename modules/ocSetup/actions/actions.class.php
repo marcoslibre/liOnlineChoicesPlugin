@@ -22,26 +22,11 @@
 ***********************************************************************************/
 ?>
 <?php
-class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
+
+class ocSetupActions extends sfActions
 {
-  public function initialize()
+  public function executeIndex(sfWebRequest $request)
   {
-    $this->configuration->appendMenus(array(
-      'ticketting' => array(
-        'Setup' => array(
-          'url'   => array('app' => 'tck', 'route' => '@oc_setup'),
-          'credential' => array(),
-        ),
-      )
-    ));
-    
-    $this->dispatcher->connect('routing.load_configuration', array('liOnlineChoiceRouting', 'listenToRoutingLoadConfigurationEvent'));
-    
-    return parent::initialize();
-  }
-  
-  public function listenToRoutingLoadConfigurationEvent(sfEvent $event)
-  {
-    return liOnlineChoiceRouting::listenToRoutingLoadConfigurationEvent($event, $this);
+    die('pouet');
   }
 }
