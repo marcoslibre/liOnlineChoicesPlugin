@@ -95,9 +95,9 @@ OcTimeSlot:
     type: concrete
   columns:
     starts_at:
-      type: datetime
+      type: timestamp
       notnull: true
     ends_at:
-      type: datetime
+      type: timestamp
       notnull: true
       

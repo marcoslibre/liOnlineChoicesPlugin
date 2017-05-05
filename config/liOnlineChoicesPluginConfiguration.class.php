@@ -26,22 +26,19 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
 {
   public function initialize()
   {
+    // add submenus
     $this->configuration->appendMenus(array(
       'ticketting' => array(
         'Setup' => array(
-          'url'   => array('app' => 'tck', 'route' => '@oc_setup'),
+          'url'   => array(
+            'app' => 'tck',
+            'route' => 'oc_setup/index'
+          ),
           'credential' => array(),
         ),
       )
     ));
     
-    $this->dispatcher->connect('routing.load_configuration', array('liOnlineChoiceRouting', 'listenToRoutingLoadConfigurationEvent'));
-    
     return parent::initialize();
-  }
-  
-  public function listenToRoutingLoadConfigurationEvent(sfEvent $event)
-  {
-    return liOnlineChoiceRouting::listenToRoutingLoadConfigurationEvent($event, $this);
   }
 }
