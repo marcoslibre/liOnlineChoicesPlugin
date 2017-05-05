@@ -29,12 +29,13 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
     // add submenus
     $this->configuration->appendMenus(array(
       'ticketting' => array(
-        'Setup' => array(
+        'Context Setup' => array(
           'url'   => array(
             'app' => 'tck',
             'route' => 'oc_setup/index'
           ),
           'credential' => array(),
+          'i18n'  => 'li_oc',
         ),
       )
     ));
