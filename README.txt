@@ -1,5 +1,6 @@
 To install this plugin, you have to :
 1. put it in your %SF_PLUGIN_DIR% directory
-2. add it into the app.yml of your default application and your tck application (app_options_plugins: [liOnlineChoices])
+2. add it into the config/extra-modules.php file
 3. build the model, filters and forms, and create the database
-4. discover a new submenu in the "ticketing" menu
+4. activate the modules in your targetted sf1 app as proposed in the config/extra-modules.php.template provided by the plugin
+5. discover new submenus in the "ticketing" menu and various modules
