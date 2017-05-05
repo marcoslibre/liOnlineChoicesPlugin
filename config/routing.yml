@@ -91,7 +91,7 @@ oc_setup:
   class: sfDoctrineRouteCollection
   options:
     model:                OcConfig
-    module:               oc_setup
+    module:               ocSetup
     prefix_path:          /oc_setup
     column:               id
     with_wildcard_routes: true
