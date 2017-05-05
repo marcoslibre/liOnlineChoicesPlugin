@@ -18,4 +18,5 @@ generator:
       filter:  ~
       form:    ~
       edit:    ~
-      new:     ~
+      new:
+        title: Your configuration

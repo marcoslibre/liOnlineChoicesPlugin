@@ -80,6 +80,10 @@ OcConfig:
       notnull: true
     workspace_id: integer
   relations:
+    Workspace:
+      onDelete: SET NULL
+      onUpdate: CASCADE
+      foreignAlias: OcConfigs
     sfGuardUser:
       foreignType: one
       onDelete: CASCADE
@@ -88,7 +92,7 @@ OcConfig:
     Group:
       onDelete: CASCADE
       onUpdate: CASCADE
-      foreignAlias: OcConfig
+      foreignAlias: OcConfigs
 OcTimeSlot:
   inheritance:
     extends: Traceable
