@@ -10,19 +10,8 @@
  *
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
  */
-class apiActions extends sfActions
+class apiActions extends jsonActions
 {
-
-    /**
-     * 
-     */
-    public function preExecute()
-    {
-        //disable layout
-        $this->setLayout(false);
-        //json response header
-        $this->getResponse()->setHttpHeader('Content-type', 'application/json');
-    }
 
     /**
      * Action executed when requesting /[resource].
@@ -165,17 +154,6 @@ class apiActions extends sfActions
     public function delete(sfWebRequest $request)
     {
         return array('message' => __METHOD__);
-    }
-
-    /**
-     * 
-     * @param array $data
-     * @return string (sfView::NONE)
-     */
-    protected function createJsonResponse(array $data, $status = ApiHttpStatus::SUCCESS)
-    {
-        $this->getResponse()->setStatusCode($status);
-        return $this->renderText(json_encode($data, null, JSON_PRETTY_PRINT));
     }
 
     /**
