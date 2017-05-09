@@ -10,4 +10,9 @@
  */
 abstract class PluginOcTimeSlotForm extends BaseOcTimeSlotForm
 {
+  public function configure()
+  {
+    parent::configure();
+    $this->widgetSchema->getFormFormatter()->setTranslationCatalogue('li_oc');
+  }
 }

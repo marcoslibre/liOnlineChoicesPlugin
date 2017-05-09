@@ -32,7 +32,15 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
         'Context Setup' => array(
           'url'   => array(
             'app' => 'tck',
-            'route' => 'oc_setup/index'
+            'route' => 'ocSetup/index'
+          ),
+          'credential' => array(),
+          'i18n'  => 'li_oc',
+        ),
+        'Define Time Slots' => array(
+          'url'   => array(
+            'app' => 'tck',
+            'route' => 'oc_time_slot/index'
           ),
           'credential' => array(),
           'i18n'  => 'li_oc',

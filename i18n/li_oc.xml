@@ -5,8 +5,36 @@
     <header/>
     <body>
       <trans-unit>
+        <source>Group</source>
+        <target>Groupe</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Workspace</source>
+        <target>Espace de travail</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Starts at</source>
+        <target>Début</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Starts before</source>
+        <target>Débutte avant le</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Ends after</source>
+        <target>Termine après le</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Ends at</source>
+        <target>Fin</target>
+      </trans-unit>
+      <trans-unit>
         <source>Context Setup</source>
         <target>Configuration contextuelle</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Define Time Slots</source>
+        <target>Créneaux horaires</target>
       </trans-unit>
     </body>
   </file>
