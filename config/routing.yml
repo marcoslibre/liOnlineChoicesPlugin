@@ -305,3 +305,11 @@ oc_application:
     column:               id
     with_wildcard_routes: true
 
+oc_backend:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                OcProfessional
+    module:               ocBackend
+    prefix_path:          /oc_backend
+    column:               id
+    with_wildcard_routes: true
