@@ -46,7 +46,7 @@ class jsonActions extends sfActions
 
     /**
      * Retrieve a service by name
-     * The service configurations is in /config/services.yml and in [plugin]/config/services.yml
+     * The service configurations is in SF_ROOT_DIR/config/services.yml and in SF_PLUGINS_DIR/[plugin]/config/services.yml
      */
     public function getService($aServiceName)
     {

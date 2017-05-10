@@ -7,5 +7,7 @@ return [
   'ocSetup',
   'ocTimeSlot',
   'ocApplication',
+  'ocApiOAuth',
+  'ocApiCustomers',
 
 ];
