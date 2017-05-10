@@ -33,6 +33,7 @@ class jsonActions extends sfActions
     }
 
     /**
+     * Create a json response from an array and a status code
      * 
      * @param array $data
      * @return string (sfView::NONE)
@@ -44,7 +45,8 @@ class jsonActions extends sfActions
     }
 
     /**
-     * 
+     * Retrieve a service by name
+     * The service configurations is in /config/services.yml and in [plugin]/config/services.yml
      */
     public function getService($aServiceName)
     {
