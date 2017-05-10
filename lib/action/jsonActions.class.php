@@ -32,6 +32,6 @@ class jsonActions extends sfActions
     protected function createJsonResponse(array $data, $status = ApiHttpStatus::SUCCESS)
     {
         $this->getResponse()->setStatusCode($status);
-        return $this->renderText(json_encode($data, null, JSON_PRETTY_PRINT));
+        return $this->renderText(json_encode($data, JSON_PRETTY_PRINT));
     }
 }

@@ -5,6 +5,22 @@
     <header/>
     <body>
       <trans-unit>
+        <source>Secret</source>
+        <target>Secret</target>
+      </trans-unit>
+      <trans-unit>
+        <source>User</source>
+        <target>Utilisateur</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Identifier</source>
+        <target>Identifiant</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Let it empty if no change is required</source>
+        <target>Laisser vide sauf besoin de changement</target>
+      </trans-unit>
+      <trans-unit>
         <source>Group</source>
         <target>Groupe</target>
       </trans-unit>
@@ -35,6 +51,10 @@
       <trans-unit>
         <source>Define Time Slots</source>
         <target>Créneaux horaires</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Authorize Applications</source>
+        <target>Autorisation d'applications</target>
       </trans-unit>
     </body>
   </file>

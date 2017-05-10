@@ -29,6 +29,14 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
     // add submenus
     $this->configuration->appendMenus(array(
       'ticketting' => array(
+        'Define Time Slots' => array(
+          'url'   => array(
+            'app' => 'tck',
+            'route' => 'oc_time_slot/index'
+          ),
+          'credential' => array(),
+          'i18n'  => 'li_oc',
+        ),
         'Context Setup' => array(
           'url'   => array(
             'app' => 'tck',
@@ -37,10 +45,10 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
           'credential' => array(),
           'i18n'  => 'li_oc',
         ),
-        'Define Time Slots' => array(
+        'Authorize Applications' => array(
           'url'   => array(
             'app' => 'tck',
-            'route' => 'oc_time_slot/index'
+            'route' => 'ocApplication/index'
           ),
           'credential' => array(),
           'i18n'  => 'li_oc',

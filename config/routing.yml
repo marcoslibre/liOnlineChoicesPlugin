@@ -296,3 +296,12 @@ oc_time_slot:
     column:               id
     with_wildcard_routes: true
 
+oc_application:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                OcApplication
+    module:               ocApplication
+    prefix_path:          /ocApplication
+    column:               id
+    with_wildcard_routes: true
+
