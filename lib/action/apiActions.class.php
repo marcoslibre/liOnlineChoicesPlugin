@@ -107,9 +107,12 @@ class apiActions extends jsonActions
     }
 
     /**
+     * Action for a GET:/[resource]/[id] request
+     * The specified id has to be retrieved from the $request
+     * The id key is defined in routing.yml
      * 
      * @param sfWebRequest $request
-     * @return array
+     * @return array (a single entity)
      */
     public function getOne(sfWebRequest $request)
     {
@@ -117,9 +120,11 @@ class apiActions extends jsonActions
     }
 
     /**
+     * Action for a GET:/[resource] request 
+     * Criteria and filters can be retrieved in $query
      * 
      * @param sfWebRequest $request
-     * @return array
+     * @return array (a list of entities)
      */
     public function getAll(sfWebRequest $request, array $query)
     {
@@ -127,6 +132,7 @@ class apiActions extends jsonActions
     }
 
     /**
+     * Action for a POST:/[resource] request
      * 
      * @param sfWebRequest $request
      * @return array
@@ -137,6 +143,9 @@ class apiActions extends jsonActions
     }
 
     /**
+     * Action for a POST|PUT:/[resource]/id request
+     * The specified id has to be retrieved from the $request
+     * The id key is defined in routing.yml
      * 
      * @param sfWebRequest $request
      * @return array
@@ -147,6 +156,9 @@ class apiActions extends jsonActions
     }
 
     /**
+     * Action for a DELETE:/[resource]/id request
+     * The specified id has to be retrieved from the $request
+     * The id key is defined in routing.yml
      * 
      * @param sfWebRequest $request
      * @return array
@@ -157,6 +169,7 @@ class apiActions extends jsonActions
     }
 
     /**
+     * Check if actions are specified in routing.yml
      * 
      * @param sfWebRequest $request
      * @return type
@@ -169,6 +182,7 @@ class apiActions extends jsonActions
     }
 
     /**
+     * Build the query parameters (criteria and filters) from the request
      * 
      * @param sfWebRequest $request
      * @return array

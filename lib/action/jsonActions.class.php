@@ -18,6 +18,14 @@ class jsonActions extends sfActions
      */
     public function preExecute()
     {
+        /* @var $oauthService ApiAuthService */
+        $oauthService = $this->getService('oauth_service');
+
+        if (!$oauthService->isAuthenticated($this->getRequest())) {
+            $this->getResponse()->setStatusCode(ApiHttpStatus::UNAUTHORIZED);
+            throw new sfException('Invalide Authentication credentials');
+        }
+
         //disable layout
         $this->setLayout(false);
         //json response header
@@ -25,6 +33,7 @@ class jsonActions extends sfActions
     }
 
     /**
+     * Create a json response from an array and a status code
      * 
      * @param array $data
      * @return string (sfView::NONE)
@@ -33,5 +42,14 @@ class jsonActions extends sfActions
     {
         $this->getResponse()->setStatusCode($status);
         return $this->renderText(json_encode($data, JSON_PRETTY_PRINT));
+    }
+
+    /**
+     * Retrieve a service by name
+     * The service configurations is in /config/services.yml and in [plugin]/config/services.yml
+     */
+    public function getService($aServiceName)
+    {
+        return sfContext::getInstance()->getContainer()->get($aServiceName);
     }
 }
