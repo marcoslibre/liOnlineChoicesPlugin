@@ -10,4 +10,14 @@
  */
 abstract class PluginOcTimeSlotFormFilter extends BaseOcTimeSlotFormFilter
 {
+  public function configure()
+  {
+    parent::configure();
+    $this->widgetSchema->getFormFormatter()->setTranslationCatalogue('li_oc');
+    
+    $this->widgetSchema['starts_before'] = new liWidgetFormJQueryDateText([
+    ]);
+    $this->widgetSchema['ends_after'] = new liWidgetFormJQueryDateText([
+    ]);
+  }
 }

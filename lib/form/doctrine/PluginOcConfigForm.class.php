@@ -12,6 +12,9 @@ abstract class PluginOcConfigForm extends BaseOcConfigForm
 {
   public function configure()
   {
+    parent::configure();
+    $this->widgetSchema->getFormFormatter()->setTranslationCatalogue('li_oc');
+    
     $this->widgetSchema['sf_guard_user_id'] = new sfWidgetFormInputHidden;
     $this->widgetSchema['automatic']        = new sfWidgetFormInputHidden;
     $this->widgetSchema['version']          = new sfWidgetFormInputHidden;

@@ -1,0 +1,32 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           OcTimeSlot
+    theme:                 jroller
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          oc_time_slot
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+    i18n_catalogue:        li_oc
+
+    config:
+      actions: ~
+      fields:
+        starts_before:
+          type: date
+        ends_after:
+          type: date
+      list:
+        display: [starts_at, ends_at]
+        object_actions:
+          _edit: ~
+          _delete: ~
+      filter:
+        display: [starts_before, ends_after]
+      form:
+        display: [starts_at, ends_at]
+      edit: ~
+      new: ~
