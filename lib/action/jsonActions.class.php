@@ -9,21 +9,26 @@
  * Description of apiActions
  *
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
+ * @author Baptiste SIMON <baptiste.simon@libre-informatique.fr>
  */
 class jsonActions extends sfActions
 {
-
     /**
      * 
      */
     public function preExecute()
     {
-        /* @var $oauthService ApiAuthService */
-        $oauthService = $this->getService('oauth_service');
-
-        if (!$oauthService->isAuthenticated($this->getRequest())) {
-            $this->getResponse()->setStatusCode(ApiHttpStatus::UNAUTHORIZED);
-            throw new sfException('Invalide Authentication credentials');
+        // to be tested only if the module "is_secure"
+        if ( $this->getSecurityValue('is_secure', false) )
+        {
+            /* @var $oauthService ApiAuthService */
+            $oauthService = $this->getService('oauth_service');
+            
+            if ( !$oauthService->isAuthenticated($this->getRequest()) )
+            {
+                $this->getResponse()->setStatusCode(ApiHttpStatus::UNAUTHORIZED);
+                throw new sfException('Invalid authentication credentials');
+            }
         }
 
         //disable layout

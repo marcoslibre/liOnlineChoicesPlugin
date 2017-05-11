@@ -23,16 +23,12 @@ abstract class PluginOcApplicationForm extends BaseOcApplicationForm
   
   public function doSave($con = null)
   {
+    $oauth = sfContext::getInstance()->getContainer()->get('oauth_service');
+    
     if ( $this->values['secret_new'] || $this->object->isNew() )
-      $this->values['secret'] = $this->encryptSecret($this->values['secret_new']);
+      $this->values['secret'] = $oauth->encryptSecret($this->values['secret_new']);
     unset($this->values['secret_new']);
     
     parent::doSave($con);
-  }
-  
-  public static function encryptSecret($secret)
-  {
-    $salt = sfConfig::get('project_eticketting_salt', '123456789azerty');
-    return md5($secret.$salt);
   }
 }

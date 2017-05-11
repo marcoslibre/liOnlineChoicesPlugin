@@ -26,6 +26,19 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
 {
   public function initialize()
   {
+    $this->initializeSubmenus();
+    $this->initializeAutoload();
+    
+    return parent::initialize();
+  }
+
+  public function initializeAutoload()
+  {
+    require_once sfConfig::get('sf_lib_dir').'/vendor/externals/composer/vendor/autoload.php';
+  }
+  
+  public function initializeSubmenus()
+  {
     // add submenus
     $this->configuration->appendMenus(array(
       'ticketting' => array(
@@ -55,7 +68,5 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
         ),
       )
     ));
-    
-    return parent::initialize();
   }
 }
