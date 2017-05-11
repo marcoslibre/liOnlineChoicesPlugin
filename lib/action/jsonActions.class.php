@@ -55,6 +55,6 @@ class jsonActions extends sfActions
      */
     public function getService($aServiceName)
     {
-        return sfContext::getInstance()->getContainer()->get($aServiceName);
+        return $this->getContext()->getContainer()->get($aServiceName);
     }
 }

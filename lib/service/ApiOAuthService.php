@@ -9,20 +9,26 @@
  * Description of ApiOAuthService
  *
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
+ * @author Baptiste SIMON <baptiste.simon@libre-informatique.fr>
  */
 class ApiOAuthService
 {
+    /**
+     * @var OcToken
+     **/
+    protected $token = NULL;
+    
     /**
      * 
      * @param sfWebRequest $request
      * @return boolean
      */
-    public function isAuthenticated(sfWebRequest $request)
+    public function isAuthenticated()
     {
-        $key = $request->getHttpHeader('Authorization');
+        $key = str_replace('Bearer ', '', $this->getAuthorizationHeader());
         
         try {
-            $this->findOneByApiKey($key);
+            $this->token = $this->findOneByApiKey($key);
             return true;
         }
         catch ( liOnlineSaleException $e )
@@ -30,7 +36,24 @@ class ApiOAuthService
             return false;
         }
     }
-
+    
+    protected function getAuthorizationHeader()
+    {
+        $headers = getallheaders();
+        if ( isset($headers['Authorization']) )
+            return $headers['Authorization'];
+        return false;
+    }
+    
+    /**
+     *
+     * @return OcToken
+     **/
+    public function getToken()
+    {
+        return $this->token;
+    }
+    
     public function findOneByApiKey($key)
     {
         $q = Doctrine::getTable('OcToken')->createQuery('ot')
@@ -67,6 +90,7 @@ class ApiOAuthService
         $token->refresh_token = $this->generateToken();
         $token->expires_at = $this->getExpirationTime();
         $token->oc_application_id = $app->id;
+        $token->OcTransaction[] = new OcTransaction;
         $token->save();
         
         return $token;

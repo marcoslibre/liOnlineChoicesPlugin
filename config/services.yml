@@ -8,4 +8,7 @@ all:
   services:
       oauth_service:
           class: ApiOAuthService
+      customers_service:
+          class: ApiCustomersService
+          arguments: ["@oauth_service"]
           

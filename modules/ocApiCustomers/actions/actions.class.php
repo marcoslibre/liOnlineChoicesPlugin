@@ -31,6 +31,20 @@ class ocApiCustomersActions extends apiActions
      */
     public function getAll(sfWebRequest $request, array $query)
     {
-        return array('message' => __METHOD__);
+        $customers = $this->getService('customers_service');
+        if ( !$customers->isIdentificated() && !$query['criteria'] )
+            return [];
+        
+        $customer = $customers->identify($query);
+        if ( !$customer )
+            return [];
+        
+        echo "TODO - https://github.com/betaglop/e-venement/blob/master/doc/api/customers.rst#collection-of-customers\n";
+        return ['success'];
+    }
+    
+    public function buildQuery(sfWebRequest $request)
+    {
+        $params = parent::buildQuery($request);
     }
 }

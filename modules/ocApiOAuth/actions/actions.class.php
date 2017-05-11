@@ -18,7 +18,7 @@ class ocApiOAuthActions extends jsonActions
      */
     public function executeToken(sfWebRequest $request)
     {
-        $oauth = $this->getContext()->getContainer()->get('oauth_service');
+        $oauth = $this->getService('oauth_service');
         
         // authenticates the app
         try {

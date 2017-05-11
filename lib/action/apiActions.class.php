@@ -9,6 +9,7 @@
  * Description of apiActions
  *
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
+ * @author Baptiste SIMON <baptiste.simon@libre-informatique.fr>
  */
 class apiActions extends jsonActions
 {
@@ -190,10 +191,12 @@ class apiActions extends jsonActions
     private function buildQuery(sfWebRequest $request)
     {
         $params = $request->getGetParameters();
-        return array(
-            'sorting' => $this->buildSortingQuery($params['sorting']),
-            'criteria' => $this->buildCriteriaQuery($params['criteria'])
-        );
+        return [
+            'page'      => isset($params['page'])     ? $this->buildSortingQuery($params['page'])      : NULL,
+            'limit'     => isset($params['limit'])    ? $this->buildSortingQuery($params['limit'])     : NULL,
+            'sorting'   => isset($params['sorting'])  ? $this->buildSortingQuery($params['sorting'])   : NULL,
+            'criteria'  => isset($params['criteria']) ? $this->buildCriteriaQuery($params['criteria']) : NULL,
+        ];
     }
 
     /**
@@ -201,9 +204,9 @@ class apiActions extends jsonActions
      * @param array|null $params
      * @return array
      */
-    private function buildSortingQuery($params = array())
+    private function buildSortingQuery($params = [])
     {
-        $sortingParams = (null === $params ? array() : $params);
+        $sortingParams = (null === $params ? [] : $params);
         return $sortingParams;
     }
 
@@ -212,31 +215,45 @@ class apiActions extends jsonActions
      * @param array|null $params
      * @return array
      */
-    private function buildCriteriaQuery($params = array())
+    private function buildCriteriaQuery($params = [])
     {
-        $criteriaParams = (null === $params ? array() : $params);
-        $result = array();
+        $criteriaParams = !is_array($params) ? [] : $params;
+        $result = [];
 
-        $allowedCriteria = array('search');
+        $allowedCriteria = [];
 
-        $allowedTypes = array(
+        $allowedTypes = [
             'contain', 'not contain',
             'equal', 'not equal',
             'start with', 'end with',
             'empty', 'not empty',
-            'in', 'not in'
-        );
+            'in', 'not in',
+            'greater', 'lesser',
+            'greater or equal', 'lesser or equal',
+        ];
 
-        foreach ($criteriaParams as $criteria => $options) {
-            if (!in_array($criteria, $allowedCriteria)) {
+        foreach ( $criteriaParams as $criteria => $options )
+        {
+            // this is done to limit allowed criterias, usually useless
+            if ( is_array($allowedCriteria)
+              && count($allowedCriteria) > 0
+              && !in_array($criteria, $allowedCriteria) )
+            {
+                continue;
+            }
+            
+            if (!( isset($options['type']) && $options['type'] ))
+                $options['type'] = 'equal';
+
+            if ( !in_array($options['type'], $allowedTypes) )
+            {
                 continue;
             }
 
-            if (!in_array($options['type'], $allowedTypes)) {
-                continue;
-            }
-
-            $result[$criteria] = $options['value'];
+            $result[$criteria] = [
+                'value' => $options['value'],
+                'type'  => $options['type'],
+            ];
         }
 
         return $result;
