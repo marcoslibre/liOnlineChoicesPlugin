@@ -27,16 +27,13 @@ class liOnlineChoicesPluginConfiguration extends sfPluginConfiguration
   public function initialize()
   {
     $this->initializeSubmenus();
+    
+    // this should usually be useless because the require is made by the config/autoload.inc.php
     $this->initializeAutoload();
     
     return parent::initialize();
   }
 
-  public function initializeAutoload()
-  {
-    require_once sfConfig::get('sf_lib_dir').'/vendor/externals/composer/vendor/autoload.php';
-  }
-  
   public function initializeSubmenus()
   {
     // add submenus
