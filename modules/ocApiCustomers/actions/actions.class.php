@@ -37,7 +37,7 @@ class ocApiCustomersActions extends apiActions
         
         $customer = $customers->identify($query);
         
-        return $customers->getIdentifiedCustomer();
+        return $this->getListWithDecorator([$customers->getIdentifiedCustomer()], $query);
     }
     
     public function buildQuery(sfWebRequest $request)

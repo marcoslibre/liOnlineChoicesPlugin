@@ -11,7 +11,7 @@
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
  * @author Baptiste SIMON <baptiste.simon@libre-informatique.fr>
  */
-class apiActions extends jsonActions
+abstract class apiActions extends jsonActions
 {
 
     /**
@@ -130,6 +130,43 @@ class apiActions extends jsonActions
     public function getAll(sfWebRequest $request, array $query)
     {
         return array('message' => __METHOD__);
+    }
+    
+    protected function getListWithDecorator(array $data, array $query)
+    {
+        $this->getContext()->getConfiguration()->loadHelpers('Url');
+        $customers = $this->getService('customers_service');
+        $total = $customers->countResults($query);
+        $limit = $query['limit'] ? $query['limit'] : 10;
+        $params = $this->getRequest()->getGetParameters();
+        
+        // qstrings
+        $params['limit'] = $limit;
+        $qstrings['self'] = http_build_query($params);
+        
+        $params['page'] = 1;
+        $qstrings['first'] = http_build_query($params);
+        
+        $params['page'] = $nbpages = ceil($total / $limit);
+        $qstrings['last'] = http_build_query($params);
+        
+        $params['page'] = $page == $nbpages ? $page : $page + 1;
+        $qstrings['next'] = http_build_query($params);
+        
+        // return
+        return [
+            'page'   => $query['page'] ? $query['page'] : 1,
+            'limit'  => $limit,
+            'pages'  => $nbpages,
+            'total'  => $total,
+            '_links' => [
+                'self'  => [ 'href' => url_for($this->getContext()->getModuleName().'/'.$this->getContext()->getActionName().'?'.$qstrings['self'])  ],
+                'first' => [ 'href' => url_for($this->getContext()->getModuleName().'/'.$this->getContext()->getActionName().'?'.$qstrings['first']) ],
+                'last'  => [ 'href' => url_for($this->getContext()->getModuleName().'/'.$this->getContext()->getActionName().'?'.$qstrings['last']) ],
+                'next'  => [ 'href' => url_for($this->getContext()->getModuleName().'/'.$this->getContext()->getActionName().'?'.$qstrings['next']) ],
+            ],
+            '_embedded' => [ 'items' => $data ],
+        ];
     }
 
     /**

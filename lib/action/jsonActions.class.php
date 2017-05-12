@@ -11,7 +11,7 @@
  * @author Glenn Cavarlé <glenn.cavarle@libre-informatique.fr>
  * @author Baptiste SIMON <baptiste.simon@libre-informatique.fr>
  */
-class jsonActions extends sfActions
+abstract class jsonActions extends sfActions
 {
     /**
      * 

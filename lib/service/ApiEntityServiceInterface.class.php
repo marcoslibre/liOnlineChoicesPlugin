@@ -18,18 +18,29 @@ interface ApiEntityServiceInterface
      * or a single record as expected by the API definitions
      * 
      * @param Doctrine_Collection|Doctrine_Record  $mixed
-     * @return Doctrine_Query
+     * @return array
      */
     public function getFormattedEntities($mixed);
+    
+    /**
+     * Takes a Doctrine_Record and transforms
+     * it into a single record as expected by the API definitions
+     * 
+     * @param Doctrine_Record  $mixed
+     * @return array
+     */
+    public function getFormattedEntity(Doctrine_Record $record);
     
     /**
      * Builds a DB query representing the actual API request
      * The Doctrine_Query needs to be designed with aliases similar to table names
      * 
-     * @param array  the given API query
+     * @param array    $query  the given API query
+     * @param integer  $limit  the maximum number of result expected
+     * @param integer  $page   the current requested page (pagination)
      * @return Doctrine_Query
      */
-    public function buildQuery(array $query);
+    public function buildQuery(array $query, $limit = NULL, $page = NULL);
     
     /**
      * Builds an initial query for current entity

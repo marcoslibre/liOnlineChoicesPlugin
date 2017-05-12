@@ -40,7 +40,7 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         return $r;
     }
     
-    protected function getFormattedEntity(Doctrine_Record $record)
+    public function getFormattedEntity(Doctrine_Record $record)
     {
         if ( $record === NULL )
             return [];
@@ -84,7 +84,7 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         return $bool ? !$value : $value;
     }
     
-    public function buildQuery(array $query)
+    public function buildQuery(array $query, $limit = NULL, $page = NULL)
     {
         if ( !is_array($query['criteria']) )
             $query['criteria'] = [];
@@ -117,7 +117,18 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             $q->andWhere($fields[$criteria].' '.$compare[0].' '.$dql, $args);
         }
         
+        if ( $limit !== NULL )
+            $q->limit($limit);
+        
+        if ( $page !== NULL )
+            $q->offset($page-1);
+        
         return $q;
+    }
+    
+    public function countResults(array $query)
+    {
+        return $this->buildQuery($query)->count();
     }
     
     public function getOperandEquivalents()

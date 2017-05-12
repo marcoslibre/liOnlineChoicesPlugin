@@ -56,7 +56,7 @@ class ApiCustomersService extends ApiEntityService
      * 
      * @return NULL|OcProfessional
      */
-    protected function getIdentifiedOcProfessional()
+    protected function getIdentifiedProfessional()
     {
         if ( !$this->isIdentificated() )
             return NULL;
@@ -69,7 +69,7 @@ class ApiCustomersService extends ApiEntityService
      */
     public function getIdentifiedCustomer()
     {
-        return $this->getFormattedEntity($this->getIdentifiedOcProfessional());
+        return $this->getFormattedEntity($this->getIdentifiedProfessional());
     }
     
     public function buildInitialQuery()
