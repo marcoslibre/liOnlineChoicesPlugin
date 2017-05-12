@@ -40,13 +40,19 @@ abstract class jsonActions extends sfActions
     /**
      * Create a json response from an array and a status code
      * 
-     * @param array $data
+     * @param array|ArrayAccess $data
      * @return string (sfView::NONE)
      */
-    protected function createJsonResponse(array $data, $status = ApiHttpStatus::SUCCESS)
+    protected function createJsonResponse($data, $status = ApiHttpStatus::SUCCESS)
     {
+        // type check
+        if ( !is_array($data) && ! $data instanceof ArrayAccess )
+        {
+            throw new liEvenementException('Argument 1 passed to jsonActions::createJsonResponse() must implement interface ArrayAccess or be an array, '.(is_object($data) ? get_class($data) : gettype($data)).'.');
+        }
+        
         $this->getResponse()->setStatusCode($status);
-        return $this->renderText(json_encode($data, JSON_PRETTY_PRINT));
+        return $this->renderText(json_encode($data, JSON_PRETTY_PRINT)."\n");
     }
 
     /**

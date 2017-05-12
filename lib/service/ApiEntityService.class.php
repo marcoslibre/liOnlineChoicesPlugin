@@ -91,11 +91,11 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         
         $q = $this->buildInitialQuery();
         
-        $fields   = $this->getFieldsEquivalents();
+        $fields   = array_merge($this->getFieldsEquivalents(), $this->getHiddenFieldsEquivalents());
         $operands = $this->getOperandEquivalents();
         
         foreach ( $query['criteria'] as $criteria => $search )
-        if ( isset($fields[$criteria]) )
+        if ( isset($fields[$criteria]) && isset($search['value']) )
         {
             $where   = $fields[$criteria].' ';
             $compare = $operands[$search['type']];
@@ -129,6 +129,11 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
     public function countResults(array $query)
     {
         return $this->buildQuery($query)->count();
+    }
+    
+    public function getHiddenFieldsEquivalents()
+    {
+        return [];
     }
     
     public function getOperandEquivalents()

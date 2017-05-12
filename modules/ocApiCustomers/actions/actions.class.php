@@ -12,7 +12,46 @@
  */
 class ocApiCustomersActions extends apiActions
 {
-
+    public function executeLogin(sfWebRequest $request)
+    {
+        $email    = $request->getParameter('email');
+        $password = $request->getParameter('password');
+        
+        if (!( $email && $password ))
+            return $this->createJsonResponse([
+                'code' => ApiHttpStatus::BAD_REQUEST,
+                'message' => 'Validation failed',
+                'errors' => [
+                    'children' => [
+                        'email'    => !$email ? ['errors' => ['Please provide an email']] : new ArrayObject,
+                        'password' => !$password ? ['errors' => ['Please provide a password']] : new ArrayObject,
+                    ],
+                ],
+            ], ApiHttpStatus::BAD_REQUEST);
+        
+        $query = [
+            'criteria' => [
+                'password'  => ['value' => $password, 'type' => 'equal'],
+                'email'     => ['value' => $email, 'type' => 'equal'],
+            ],
+        ];
+        
+        $customers = $this->getService('customers_service');
+        if ( !$customers->identify($query) )
+            return $this->createJsonResponse([
+                'code' => ApiHttpStatus::UNAUTHORIZED,
+                'message' => 'Verification failed',
+            ], ApiHttpStatus::UNAUTHORIZED);
+        
+        return $this->createJsonResponse([
+            'code' => ApiHttpStatus::SUCCESS,
+            'message' => 'Verification successful',
+            'success' => [
+                'customer' => $customers->getFormattedEntity($customers->getIdentifiedProfessional())
+            ],
+        ]);
+    }
+    
     /**
      * 
      * @param sfWebRequest $request
@@ -20,7 +59,13 @@ class ocApiCustomersActions extends apiActions
      */
     public function getOne(sfWebRequest $request)
     {
-        return array('message' => __METHOD__);
+        $customers = $this->getService('customers_service');
+        
+        $pro = $customers->getIdentifiedProfessional();
+        if ( !$pro instanceof Professional )
+            return new ArrayObject;
+        
+        return $customers->getFormattedEntity($pro);
     }
 
     /**
@@ -44,10 +89,5 @@ class ocApiCustomersActions extends apiActions
         $customer = $customers->identify($query);
         
         return $this->getListWithDecorator([$customers->getIdentifiedCustomer()], $query);
-    }
-    
-    public function buildQuery(sfWebRequest $request)
-    {
-        $params = parent::buildQuery($request);
     }
 }

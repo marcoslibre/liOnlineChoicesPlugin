@@ -60,6 +60,17 @@ interface ApiEntityServiceInterface
     public function getFieldsEquivalents();
     
     /**
+     * Builds a 1 dimension associative array representing:
+     *  on the left side, the API fields
+     *  on the right side, the Doctrine fields
+     * It represents reserved fields, that need not to be
+     * publically exposed
+     *
+     * @return array
+     */
+    public function getHiddenFieldsEquivalents();
+    
+    /**
      * Builds an array matching the API operands with DQL operands
      *
      * @return array

@@ -29,8 +29,8 @@ class ApiCustomersService extends ApiEntityService
     public function identify(array $query)
     {
         // prerequisites
-        if (!( isset($query['criteria']['password']) && $query['criteria']['password']
-            && isset($query['criteria']['email']) && $query['criteria']['email'] ))
+        if (!( isset($query['criteria']['password']) && $query['criteria']['password'] && isset($query['criteria']['password']['value'])
+            && isset($query['criteria']['email']) && $query['criteria']['email'] && isset($query['criteria']['email']['value']) ))
             return NULL;
         
         if ( $pro = $this->buildQuery($query)->fetchOne() )
@@ -56,7 +56,7 @@ class ApiCustomersService extends ApiEntityService
      * 
      * @return NULL|OcProfessional
      */
-    protected function getIdentifiedProfessional()
+    public function getIdentifiedProfessional()
     {
         if ( !$this->isIdentificated() )
             return NULL;
@@ -79,6 +79,13 @@ class ApiCustomersService extends ApiEntityService
             ->leftJoin('root.Contact Contact')
             ->leftJoin('root.Organism Organism')
         ;
+    }
+    
+    public function getHiddenFieldsEquivalents()
+    {
+        return [
+            'password'            => 'Contact.password',
+        ];
     }
     
     public function getFieldsEquivalents()

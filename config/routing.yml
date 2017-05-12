@@ -1,4 +1,14 @@
 #
+# LOGIN
+#
+oc_api_login:
+    url: /api/v2/login
+    class: sfRequestRoute
+    param: { module: ocApiCustomers, action: login }
+    requirements:
+        sf_method: [GET, POST]
+
+#
 # CUSTOMER
 #
 oc_api_customers:

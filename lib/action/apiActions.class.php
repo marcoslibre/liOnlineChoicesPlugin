@@ -230,11 +230,31 @@ abstract class apiActions extends jsonActions
     {
         $params = $request->getGetParameters();
         return [
-            'page'      => isset($params['page'])     ? $this->buildSortingQuery($params['page'])      : NULL,
-            'limit'     => isset($params['limit'])    ? $this->buildSortingQuery($params['limit'])     : NULL,
+            'page'      => isset($params['page'])     ? $this->buildPageQuery($params['page'])         : NULL,
+            'limit'     => isset($params['limit'])    ? $this->buildLimitQuery($params['limit'])       : NULL,
             'sorting'   => isset($params['sorting'])  ? $this->buildSortingQuery($params['sorting'])   : NULL,
             'criteria'  => isset($params['criteria']) ? $this->buildCriteriaQuery($params['criteria']) : NULL,
         ];
+    }
+
+    /**
+     * 
+     * @param array|null $params
+     * @return array
+     */
+    private function buildLimitQuery($params = [])
+    {
+        return $params !== null && isset($params['limit']) ? $params['limit'] : 1;
+    }
+
+    /**
+     * 
+     * @param array|null $params
+     * @return array
+     */
+    private function buildPageQuery($params = [])
+    {
+        return $params !== null && isset($params['page']) ? $params['page'] : 1;
     }
 
     /**
