@@ -32,8 +32,14 @@ class ocApiCustomersActions extends apiActions
     public function getAll(sfWebRequest $request, array $query)
     {
         $customers = $this->getService('customers_service');
+        
+        // restricts access to customers collection to requests filtering on password and email
         if ( !$customers->isIdentificated() && !$query['criteria'] )
-            return [];
+            return $this->getListWithDecorator([], $query);
+        if (!( isset($query['criteria']['email']) && isset($query['criteria']['password']) ))
+            return $this->getListWithDecorator([], $query);
+        if (!( isset($query['criteria']['email']['value']) && isset($query['criteria']['password']['value']) ))
+            return $this->getListWithDecorator([], $query);
         
         $customer = $customers->identify($query);
         

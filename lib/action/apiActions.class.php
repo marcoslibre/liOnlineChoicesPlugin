@@ -136,15 +136,16 @@ abstract class apiActions extends jsonActions
     {
         $this->getContext()->getConfiguration()->loadHelpers('Url');
         $customers = $this->getService('customers_service');
-        $total = $customers->countResults($query);
+        $total = $data ? $customers->countResults($query) : 0;
         $limit = $query['limit'] ? $query['limit'] : 10;
+        $page  = $data ? ($query['page'] ? $query['page'] : 1) : 0;
         $params = $this->getRequest()->getGetParameters();
         
         // qstrings
         $params['limit'] = $limit;
         $qstrings['self'] = http_build_query($params);
         
-        $params['page'] = 1;
+        $params['page'] = $data ? 1 : 0;
         $qstrings['first'] = http_build_query($params);
         
         $params['page'] = $nbpages = ceil($total / $limit);
@@ -155,7 +156,7 @@ abstract class apiActions extends jsonActions
         
         // return
         return [
-            'page'   => $query['page'] ? $query['page'] : 1,
+            'page'   => $page,
             'limit'  => $limit,
             'pages'  => $nbpages,
             'total'  => $total,
