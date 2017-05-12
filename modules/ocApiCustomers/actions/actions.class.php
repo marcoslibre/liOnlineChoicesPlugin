@@ -36,11 +36,8 @@ class ocApiCustomersActions extends apiActions
             return [];
         
         $customer = $customers->identify($query);
-        if ( !$customer )
-            return [];
         
-        echo "TODO - https://github.com/betaglop/e-venement/blob/master/doc/api/customers.rst#collection-of-customers\n";
-        return ['success'];
+        return $customers->getIdentifiedCustomer();
     }
     
     public function buildQuery(sfWebRequest $request)

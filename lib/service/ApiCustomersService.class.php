@@ -10,20 +10,8 @@
  *
  * @author Baptiste SIMON <baptiste.simon@libre-informatique.fr>
  */
-class ApiCustomersService
+class ApiCustomersService extends ApiEntityService
 {
-    /**
-     * @var ocApiOAuthService
-     */
-    protected $oauth;
-    
-    public function __construct(ApiOAuthService $oauth)
-    {
-        $this->oauth = $oauth;
-        if ( !$oauth->isAuthenticated(sfContext::getInstance()->getRequest()) )
-            throw new liOnlineSaleException('[customers] API not authenticated.');
-    }
-    
     /**
      * 
      * @return boolean
@@ -68,89 +56,49 @@ class ApiCustomersService
      * 
      * @return NULL|OcProfessional
      */
-    public function getCurrentOcProfessional()
+    protected function getIdentifiedOcProfessional()
     {
         if ( !$this->isIdentificated() )
             return NULL;
-        return $this->oauth->getToken()->OcTransaction[0]->OcProfessional;
+        return $this->oauth->getToken()->OcTransaction[0]->OcProfessional->Professional;
     }
     
-    public function buildQuery(array $query)
+    /**
+     *
+     * @return array
+     */
+    public function getIdentifiedCustomer()
     {
-        if ( !is_array($query['criteria']) )
-            $query['criteria'] = [];
-        
-        $q = Doctrine_Query::create()
-            ->from('Professional p')
-            ->leftJoin('p.Contact c')
-            ->leftJoin('p.Organism o')
+        return $this->getFormattedEntity($this->getIdentifiedOcProfessional());
+    }
+    
+    public function buildInitialQuery()
+    {
+        return Doctrine_Query::create()
+            ->from('Professional root')
+            ->leftJoin('root.Contact Contact')
+            ->leftJoin('root.Organism Organism')
         ;
-        
-        $fields   = $this->getFieldsEquivalents();
-        $operands = $this->getOperandEquivalents();
-        
-        foreach ( $query['criteria'] as $criteria => $search )
-        if ( isset($fields[$criteria]) )
-        {
-            $where   = $fields[$criteria].' ';
-            $compare = $operands[$search['type']];
-            $args    = [$search['value']];
-            $dql     = '?';
-            
-            if ( is_array($compare) )
-            {
-                $args = $compare[1]($search['value']);
-                if ( is_array($args) )
-                {
-                    $dql = [];
-                    foreach ( $args as $arg )
-                        $dql[] = '?';
-                    $dql = implode(',', $dql);
-                }
-            }
-            
-            $q->andWhere($fields[$criteria].' '.$compare[0].' '.$dql, $args);
-        }
-        
-        return $q;
     }
     
-    protected function getFieldsEquivalents()
+    public function getFieldsEquivalents()
     {
         return [
-            'id'            => 'p.id',
-            'email'         => 'p.contact_email',
-            'phonenumber'   => 'p.phonenumber',
-            'address'       => 'o.address',
-            'zip'           => 'o.postalcode',
-            'city'          => 'o.city',
-            'country'       => 'o.country',
-            'firstName'     => 'c.firstname',
-            'lastName'      => 'c.name',
-            'shortName'     => 'c.shortname',
-            'locale'        => 'c.culture',
-            'uid'           => 'c.vcard_uid',
-            'password'      => 'c.password',
-        ];
-    }
-    
-    protected function getOperandEquivalents()
-    {
-        return [
-            'contain'           => ['ILIKE',    function($s){ return "%$s%"; }],
-            'not contain'       => ['NOT ILIKE',function($s){ return "%$s%"; }],
-            'equal'             => '=',
-            'not equal'         => '!=',
-            'start with'        => ['ILIKE',    function($s){ return "$s%"; }],
-            'end with'          => ['ILIKE',    function($s){ return "%$s"; }],
-            'empty'             => ['=',        function($s){ return ''; }],
-            'not empty'         => ['!=',       function($s){ return ''; }],
-            'in'                => ['IN',       function($s){ return implode(',', $s); }],
-            'not in'            => ['NOT IN',   function($s){ return implode(',', $s); }],
-            'greater'           => '>',
-            'greater or equal'  => '>=',
-            'lesser'            => '<',
-            'lesser or equal'   => '<=',
+            'id'            => 'root.id',
+            'email'         => 'root.contact_email',
+            'firstName'     => 'Contact.firstname',
+            'lastName'      => 'Contact.name',
+            'shortName'     => 'Contact.shortname',
+            'address'       => 'Organism.address',
+            'zip'           => 'Organism.postalcode',
+            'city'          => 'Organism.city',
+            'country'       => 'Organism.country',
+            'phoneNumber'   => 'root.contact_number',
+            'datesOfBirth'  => 'null 1',
+            'locale'        => 'Contact.culture',
+            'uid'           => 'Contact.vcard_uid',
+            'subscribedToNewsletter' => '!root.contact_email_no_newsletter',
+            //'password'      => 'Contact.password',
         ];
     }
 }
