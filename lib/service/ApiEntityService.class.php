@@ -26,16 +26,18 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
     
     public function getFormattedEntities($mixed)
     {
+        $r = [];
+        
+        // Doctrine_Record
         if ( $mixed instanceof Doctrine_Record )
-        {
-            
-        }
+            $r = $this->getFormattedEntity($mixed);
         
+        // Doctrine_Collection
         if ( $mixed instanceof Doctrine_Collection )
-        {
-        }
+        foreach ( $mixed as $record )
+            $r[] = $this->getFormattedEntity($record);
         
-        return [];
+        return $r;
     }
     
     protected function getFormattedEntity(Doctrine_Record $record)
