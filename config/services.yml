@@ -6,6 +6,8 @@ all:
   parameters:
     
   services:
+      actions_service:
+          class: ApiActionsService
       oauth_service:
           class: ApiOAuthService
       customers_service:

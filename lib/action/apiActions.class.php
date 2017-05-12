@@ -13,6 +13,12 @@
  */
 abstract class apiActions extends jsonActions
 {
+    public function preExecute()
+    {
+        $this->getService('actions_service')
+            ->preExecute($this);
+        parent::preExecute();
+    }
 
     /**
      * Action executed when requesting /[resource].
