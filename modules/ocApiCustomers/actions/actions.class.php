@@ -18,6 +18,7 @@ class ocApiCustomersActions extends apiActions
         $password = $request->getParameter('password');
         
         if (!( $email && $password ))
+        {
             return $this->createJsonResponse([
                 'code' => ApiHttpStatus::BAD_REQUEST,
                 'message' => 'Validation failed',
@@ -28,6 +29,7 @@ class ocApiCustomersActions extends apiActions
                     ],
                 ],
             ], ApiHttpStatus::BAD_REQUEST);
+        }
         
         $query = $this->buildQuery($request, [
             'criteria' => [
@@ -38,10 +40,12 @@ class ocApiCustomersActions extends apiActions
         
         $customers = $this->getService('customers_service');
         if ( !$customers->identify($query) )
+        {
             return $this->createJsonResponse([
                 'code' => ApiHttpStatus::UNAUTHORIZED,
                 'message' => 'Verification failed',
             ], ApiHttpStatus::UNAUTHORIZED);
+        }
         
         return $this->createJsonResponse([
             'code' => ApiHttpStatus::SUCCESS,

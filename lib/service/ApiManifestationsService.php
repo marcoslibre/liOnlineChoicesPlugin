@@ -13,19 +13,19 @@
 class ApiManifestationsService extends ApiEntityService
 {
 
-    const FIELD_MAPPING = [
-        'id' => null,
-        'startsAt' => null,
-        'endsAt' => null,
-        'location' => null, //object
-        'gauges' => null, //array
-        'gauges.id' => null,
-        'gauges.translations' => null,
-        'gauges.availableUnits' => null,
-        'gauges.prices' => null, //array
-        'gauges.prices.id' => null,
-        'gauges.prices.translations' => null,
-        'gauges.prices.value' => null,
+    protected $FIELD_MAPPING = [
+        'id' => 'id',
+        'startsAt' => 'happens_at',
+        'endsAt' => 'ends_at',
+        'location' => 'Location', //object
+        //'gauges' => null, //array
+        'gauges.id' => 'Gauges.id',
+        'gauges.translations' => 'Gauges.Translation',
+        'gauges.availableUnits' => 'Gauges.free',
+        //'gauges.prices' => null, //array
+        'gauges.prices.id' => 'Gauges.Prices.id',
+        'gauges.prices.translations' => 'Gauges.Prices.Translation',
+        'gauges.prices.value' => 'Gauges.Prices.value',
         'gauges.prices.currencyCode' => null,
     ];
 
@@ -48,11 +48,18 @@ class ApiManifestationsService extends ApiEntityService
      */
     public function findOneById($manif_id)
     {
-        $manifDotrineRec = $this->buildQuery(
-                ['criteria' => ['root.id' => $manif_id]])
-            ->fetchOne();
+        $manifDotrineRec = $this->buildQuery([
+            'criteria' => [
+                'id' => [
+                    'value' => 'manif_id',
+                    'type'  => 'equal',
+                ],
+            ]
+        ])
+        ->fetchOne();
 
-        if (false === $manifDotrineRec) {
+        if (false === $manifDotrineRec)
+        {
             return null;
         }
 
@@ -61,13 +68,6 @@ class ApiManifestationsService extends ApiEntityService
 
     public function buildInitialQuery()
     {
-        return Doctrine_Query::create()
-                ->from('Manifestation root')
-                ->leftJoin('root.EventCategory EventCategory');
-    }
-
-    public function getFieldsEquivalents()
-    {
-        return static::FIELD_MAPPING;
+        return Doctrine::getTable('Manifestation')->createQuery('root');
     }
 }

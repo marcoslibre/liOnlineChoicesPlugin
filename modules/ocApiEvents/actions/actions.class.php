@@ -20,7 +20,7 @@ class ocApiEventsActions extends apiActions
      */
     public function getOne(sfWebRequest $request)
     {
-        return array('message' => __METHOD__);
+        return $this->jsonResponse(array('message' => __METHOD__));
     }
 
     /**
@@ -31,6 +31,9 @@ class ocApiEventsActions extends apiActions
      */
     public function getAll(sfWebRequest $request, array $query)
     {
-        return array('message' => __METHOD__);
+        $events  = $this->getService('events_service');
+        $results = $events->getFormattedEntities($events->buildQuery($query)->execute());
+        $result  = $this->getListWithDecorator($results, $query);
+        return $this->createJsonResponse($result);
     }
 }

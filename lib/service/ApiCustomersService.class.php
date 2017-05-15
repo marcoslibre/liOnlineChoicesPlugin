@@ -12,7 +12,7 @@
  */
 class ApiCustomersService extends ApiEntityService
 {
-    protected $fieldsEquivalents = [
+    protected $FIELD_MAPPING = [
         'id'            => 'id',
         'email'         => 'contact_email',
         'firstName'     => 'Contact.firstname',
@@ -30,7 +30,7 @@ class ApiCustomersService extends ApiEntityService
         //'password'      => 'Contact.password',
     ];
     
-    protected $hiddenFieldsEquivalents = [
+    protected $HIDDEN_FIELD_MAPPING = [
         'password'      => 'Contact.password',
     ];
     

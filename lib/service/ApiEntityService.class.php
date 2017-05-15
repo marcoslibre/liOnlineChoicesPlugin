@@ -24,6 +24,11 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             throw new liOnlineSaleException('[customers] API not authenticated.');
     }
     
+    /**
+     *
+     * @param Doctrine_Collection|Doctrine_Record $mixed
+     *
+     **/
     public function getFormattedEntities($mixed)
     {
         $r = [];
@@ -48,7 +53,7 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         $arr = [];
         foreach ( $this->getFieldsEquivalents() as $api => $db )
         {
-            // case of "not implemented"  fields
+            // case of "not implemented" fields
             if ( $db === NULL )
             {
                 $arr = $this->setResultValue(NULL, $api, $arr);
@@ -59,8 +64,11 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             if ( strpos($db, '.') === false )
             {
                 $field = preg_replace('/^!/', '', $db);
+                $value = $record->$field instanceof Doctrine_Collection || $record->$field instanceof Doctrine_Record
+                    ? $this->getDoctrineFlatData($record->$field)
+                    : $record->$field;
                 $arr = $this->setResultValue(
-                    $this->toggleBoolean($record->$field, $field != $db),
+                    $this->toggleBoolean($value, $field != $db),
                     $api,
                     $arr);
                 continue;
@@ -73,17 +81,43 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             // get back the last Doctrine_Record child
             $rec = $record;
             foreach ( $subEntities as $entity )
+            {
                 $rec = $rec->$entity;
+            }
             
+            // in case of unexistent property/object before getting back $property
+            if (!( $rec instanceof Doctrine_Record || $rec instanceof Doctrine_Collection ))
+            {
+                $arr = $this->setResultValue(NULL, $api, $arr);
+                continue;
+            }
+            
+            $value = $rec->$property instanceof Doctrine_Collection || $rec->$property instanceof Doctrine_Record
+                ? $this->getDoctrineFlatData($rec->$property)
+                : $rec->$property;
+            
+            $value = $rec->$property;
             // find out the targeted property to render
             $arr = $this->setResultValue(
-                $this->toggleBoolean($rec->$property, preg_match('/^!/', $db) === 1),
+                $this->toggleBoolean($value, preg_match('/^!/', $db) === 1),
                 $api,
                 $arr
             );
         }
         
-        return $arr;
+        return $this->postFormatEntity($arr);
+    }
+    
+    /**
+     * Post-process the formatted-as-expected-by-the-API results
+     *
+     * @param array $entity the pre-formatted entities
+     * @return array post-formatted entities
+     *
+     */
+    protected function postFormatEntity(array $entity)
+    {
+        return $entity;
     }
     
     public function buildQuery(array $query)
@@ -184,17 +218,29 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         ];
     }
 
-    public function getHiddenFieldsEquivalents()
-    {
-        return isset($this->hiddenFieldsEquivalents) ? $this->hiddenFieldsEquivalents : [];
-    }
-    
     public function getFieldsEquivalents()
     {
-        return isset($this->fieldsEquivalents) ? $this->fieldsEquivalents : [];
+        return isset($this->FIELD_MAPPING) && $this->FIELD_MAPPING
+            ? $this->FIELD_MAPPING
+            : [];
+    }
+    
+    public function getHiddenFieldsEquivalents()
+    {
+        return isset($this->HIDDEN_FIELD_MAPPING) && $this->HIDDEN_FIELD_MAPPING
+            ? $this->HIDDEN_FIELD_MAPPING
+            : [];
     }
 
-    
+    /**
+     * Sets a value in an array depending on its string description
+     * using "." as a dimension separator
+     *
+     * @param mixed $value
+     * @param string $key    description to the position in $result where to put $value
+     * @param array $result  the array to modify
+     *
+     **/
     private function setResultValue($value, $key, array $result)
     {
         $tmp = &$result;
@@ -212,5 +258,33 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
     private function toggleBoolean($value, $bool)
     {
         return $bool ? !$value : $value;
+    }
+    
+    private function getDoctrineFlatData($data)
+    {
+        if ( ! $data instanceof Doctrine_Collection && ! $data instanceof Doctrine_Record )
+            throw new liOnlineSaleException('Doctrine_Collection or Doctrine_Record expected, '.get_class($data).' given.');
+        
+        $fct = function(Doctrine_Record $rec)
+        {
+            $arr = [];
+            foreach ( $rec->getTable()->getColumns() as $colname => $coldef )
+            if ( !is_object($rec->$colname) )
+                $arr[$colname] = $rec->$colname;
+            return $arr;
+        };
+        
+        $res = [];
+        if ( $data instanceof Doctrine_Collection )
+        {
+            foreach ( $data as $rec )
+            {
+                $res[] = $fct($rec);
+            }
+        }
+        else
+            $res = $fct($rec);
+        
+        return $res;
     }
 }
