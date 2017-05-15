@@ -12,6 +12,28 @@
  */
 class ApiCustomersService extends ApiEntityService
 {
+    protected $fieldsEquivalents = [
+        'id'            => 'id',
+        'email'         => 'contact_email',
+        'firstName'     => 'Contact.firstname',
+        'lastName'      => 'Contact.name',
+        'shortName'     => 'Contact.shortname',
+        'address'       => 'Organism.address',
+        'zip'           => 'Organism.postalcode',
+        'city'          => 'Organism.city',
+        'country'       => 'Organism.country',
+        'phoneNumber'   => 'contact_number',
+        'datesOfBirth'  => NULL,
+        'locale'        => 'Contact.culture',
+        'uid'           => 'Contact.vcard_uid',
+        'subscribedToNewsletter' => '!contact_email_no_newsletter',
+        //'password'      => 'Contact.password',
+    ];
+    
+    protected $hiddenFieldsEquivalents = [
+        'password'      => 'Contact.password',
+    ];
+    
     /**
      * 
      * @return boolean
@@ -79,33 +101,5 @@ class ApiCustomersService extends ApiEntityService
             ->leftJoin('root.Contact Contact')
             ->leftJoin('root.Organism Organism')
         ;
-    }
-    
-    public function getHiddenFieldsEquivalents()
-    {
-        return [
-            'password'            => 'Contact.password',
-        ];
-    }
-    
-    public function getFieldsEquivalents()
-    {
-        return [
-            'id'            => 'id',
-            'email'         => 'contact_email',
-            'firstName'     => 'Contact.firstname',
-            'lastName'      => 'Contact.name',
-            'shortName'     => 'Contact.shortname',
-            'address'       => 'Organism.address',
-            'zip'           => 'Organism.postalcode',
-            'city'          => 'Organism.city',
-            'country'       => 'Organism.country',
-            'phoneNumber'   => 'contact_number',
-            'datesOfBirth'  => NULL,
-            'locale'        => 'Contact.culture',
-            'uid'           => 'Contact.vcard_uid',
-            'subscribedToNewsletter' => '!contact_email_no_newsletter',
-            //'password'      => 'Contact.password',
-        ];
     }
 }

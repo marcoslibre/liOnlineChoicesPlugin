@@ -230,16 +230,17 @@ abstract class apiActions extends jsonActions
      * Build the query parameters (criteria and filters) from the request
      * 
      * @param sfWebRequest $request
+     * @param array $query  optional extra data to be merged with GET parameters
      * @return array
      */
-    private function buildQuery(sfWebRequest $request)
+    protected function buildQuery(sfWebRequest $request, array $query = NULL)
     {
-        $params = $request->getGetParameters();
+        $params = array_merge($query, $request->getGetParameters());
         return [
-            'page'      => isset($params['page'])     ? $this->buildPageQuery($params['page'])         : NULL,
-            'limit'     => isset($params['limit'])    ? $this->buildLimitQuery($params['limit'])       : NULL,
-            'sorting'   => isset($params['sorting'])  ? $this->buildSortingQuery($params['sorting'])   : NULL,
-            'criteria'  => isset($params['criteria']) ? $this->buildCriteriaQuery($params['criteria']) : NULL,
+            'page'      => isset($params['page'])     ? $this->buildPageQuery($params['page'])         : 1,
+            'limit'     => isset($params['limit'])    ? $this->buildLimitQuery($params['limit'])       : 10,
+            'sorting'   => isset($params['sorting'])  ? $this->buildSortingQuery($params['sorting'])   : [],
+            'criteria'  => isset($params['criteria']) ? $this->buildCriteriaQuery($params['criteria']) : [],
         ];
     }
 
@@ -260,7 +261,9 @@ abstract class apiActions extends jsonActions
      */
     private function buildPageQuery($params = [])
     {
-        return $params !== null && isset($params['page']) ? $params['page'] : 1;
+        return $params !== null && isset($params['page']) && intval($params['page']).'' === ''.$params['page']
+            ? $params['page']
+            : 1;
     }
 
     /**
@@ -271,6 +274,15 @@ abstract class apiActions extends jsonActions
     private function buildSortingQuery($params = [])
     {
         $sortingParams = (null === $params ? [] : $params);
+        
+        foreach ( $sortingParams as $key => $value )
+        {
+            if ( !in_array($value, ['asc', 'desc']) )
+            {
+                unset($sortingParams[$key]);
+            }
+        }
+        
         return $sortingParams;
     }
 

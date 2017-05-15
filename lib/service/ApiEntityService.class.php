@@ -86,17 +86,54 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         return $arr;
     }
     
-    public function buildQuery(array $query, $limit = NULL, $page = NULL)
+    public function buildQuery(array $query)
     {
         if ( !is_array($query['criteria']) )
             $query['criteria'] = [];
         
         $q = $this->buildInitialQuery();
         
+        $this->buildQueryCondition($q, $query['criteria']);
+        $this->buildQuerySorting($q, $query['sorting']);
+        $this->buildQueryLimit($q, $query['limit']);
+        $this->buildQueryPagination($q, $query['page']);
+        
+        return $q;
+    }
+    
+    protected function buildQuerySorting(Doctrine_Query $q, array $sorting = [])
+    {
+        $orderBy = '';
+        foreach ( $sorting as $field => $direction )
+        {
+            if ( !in_array($field, $this->getFieldsEquivalents()) )
+                continue;
+            $orderBy .= array_search($field, $this->getFieldsEquivalents()).' '.$direction.' ';
+        }
+        
+        return $orderBy ? $q->orderBy($orderBy) : $q;
+    }
+    
+    protected function buildQueryLimit(Doctrine_Query $q, $limit = NULL)
+    {
+        if ( $limit !== NULL )
+            $q->limit($limit);
+        return $q;
+    }
+    
+    protected function buildQueryPagination(Doctrine_Query $q, $page = 1)
+    {
+        if ( $page !== NULL )
+            $q->offset($page-1);
+        return $q;
+    }
+    
+    protected function buildQueryCondition(Doctrine_Query $q, array $criterias = [])
+    {
         $fields   = array_merge($this->getFieldsEquivalents(), $this->getHiddenFieldsEquivalents());
         $operands = $this->getOperandEquivalents();
         
-        foreach ( $query['criteria'] as $criteria => $search )
+        foreach ( $criterias as $criteria => $search )
         if ( isset($fields[$criteria]) && isset($search['value']) )
         {
             $where   = $fields[$criteria].' ';
@@ -119,23 +156,12 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             $q->andWhere($fields[$criteria].' '.$compare[0].' '.$dql, $args);
         }
         
-        if ( $limit !== NULL )
-            $q->limit($limit);
-        
-        if ( $page !== NULL )
-            $q->offset($page-1);
-        
         return $q;
     }
     
     public function countResults(array $query)
     {
         return $this->buildQuery($query)->count();
-    }
-    
-    public function getHiddenFieldsEquivalents()
-    {
-        return [];
     }
     
     public function getOperandEquivalents()
@@ -157,6 +183,17 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             'lesser or equal'   => '<=',
         ];
     }
+
+    public function getHiddenFieldsEquivalents()
+    {
+        return isset($this->hiddenFieldsEquivalents) ? $this->hiddenFieldsEquivalents : [];
+    }
+    
+    public function getFieldsEquivalents()
+    {
+        return isset($this->fieldsEquivalents) ? $this->fieldsEquivalents : [];
+    }
+
     
     private function setResultValue($value, $key, array $result)
     {

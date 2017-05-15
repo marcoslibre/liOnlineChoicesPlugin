@@ -40,7 +40,7 @@ interface ApiEntityServiceInterface
      * @param integer  $page   the current requested page (pagination)
      * @return Doctrine_Query
      */
-    public function buildQuery(array $query, $limit = NULL, $page = NULL);
+    public function buildQuery(array $query);
     
     /**
      * Builds an initial query for current entity

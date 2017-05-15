@@ -29,12 +29,12 @@ class ocApiCustomersActions extends apiActions
                 ],
             ], ApiHttpStatus::BAD_REQUEST);
         
-        $query = [
+        $query = $this->buildQuery($request, [
             'criteria' => [
                 'password'  => ['value' => $password, 'type' => 'equal'],
                 'email'     => ['value' => $email, 'type' => 'equal'],
             ],
-        ];
+        ]);
         
         $customers = $this->getService('customers_service');
         if ( !$customers->identify($query) )
