@@ -46,20 +46,23 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             return [];
         
         $arr = [];
-        $matches = array_flip($this->getFieldsEquivalents());
-        foreach ( $matches as $db => $api )
+        foreach ( $this->getFieldsEquivalents() as $api => $db )
         {
             // case of "not implemented"  fields
             if ( preg_match('/^null /', $db) === 1 )
             {
-                $arr[$api] = NULL;
+                $this->setResultValue(NULL, $api, $arr);
                 continue;
             }
             
             // direct fields from the root entity
-            if ( preg_match('/^!?root\.(.*)$/', $db, $result) === 1 )
+            if ( strpos($db, '.') === false )
             {
-                $arr[$api] = $this->toggleBoolean($record->$result[1], preg_match('/^!/', $db) === 1);
+                $field = preg_replace('/^!/', '', $db);
+                $this->setResultValue(
+                    $this->toggleBoolean($record->$field, $field != $db),
+                    $api,
+                    $arr);
                 continue;
             }
             
@@ -73,15 +76,14 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
                 $rec = $rec->$entity;
             
             // find out the targeted property to render
-            $arr[$api] = $this->toggleBoolean($rec->$property, preg_match('/^!/', $db) === 1);
+            $this->setResultValue(
+                $this->toggleBoolean($rec->$property, preg_match('/^!/', $db) === 1),
+                $api,
+                $arr
+            );
         }
         
         return $arr;
-    }
-    
-    private function toggleBoolean($value, $bool)
-    {
-        return $bool ? !$value : $value;
     }
     
     public function buildQuery(array $query, $limit = NULL, $page = NULL)
@@ -154,5 +156,24 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             'lesser'            => '<',
             'lesser or equal'   => '<=',
         ];
+    }
+    
+    private function setResultValue($value, $key, array $result)
+    {
+        $tmp = &$result;
+        foreach ( explode('.', $key) as $field )
+        {
+            if ( !isset($tmp[$field]) )
+                $tmp[$field] = [];
+            $tmp = &$tmp[$field];
+        }
+        $tmp = $value;
+        
+        return $result;
+    }
+    
+    private function toggleBoolean($value, $bool)
+    {
+        return $bool ? !$value : $value;
     }
 }
