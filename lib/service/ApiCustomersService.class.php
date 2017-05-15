@@ -91,8 +91,8 @@ class ApiCustomersService extends ApiEntityService
     public function getFieldsEquivalents()
     {
         return [
-            'id'            => 'root.id',
-            'email'         => 'root.contact_email',
+            'id'            => 'id',
+            'email'         => 'contact_email',
             'firstName'     => 'Contact.firstname',
             'lastName'      => 'Contact.name',
             'shortName'     => 'Contact.shortname',
@@ -100,11 +100,11 @@ class ApiCustomersService extends ApiEntityService
             'zip'           => 'Organism.postalcode',
             'city'          => 'Organism.city',
             'country'       => 'Organism.country',
-            'phoneNumber'   => 'root.contact_number',
+            'phoneNumber'   => 'contact_number',
             'datesOfBirth'  => 'null 1',
             'locale'        => 'Contact.culture',
             'uid'           => 'Contact.vcard_uid',
-            'subscribedToNewsletter' => '!root.contact_email_no_newsletter',
+            'subscribedToNewsletter' => '!contact_email_no_newsletter',
             //'password'      => 'Contact.password',
         ];
     }
