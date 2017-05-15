@@ -13,4 +13,6 @@ all:
       customers_service:
           class: ApiCustomersService
           arguments: ["@oauth_service"]
+      manifestations_service:
+          class: ApiManifestationsService
           

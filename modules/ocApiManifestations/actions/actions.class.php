@@ -21,6 +21,10 @@ class ocApiManifestationsActions extends apiActions
      */
     public function getAll(sfWebRequest $request, array $query)
     {
-        return array('message' => __METHOD__);
+        /* @var $manifService ApiManifestationsService */
+        $manifService = $this->getService('manifestations_service');
+        $result = $manifService->findAll();
+
+        return $result;
     }
 }
