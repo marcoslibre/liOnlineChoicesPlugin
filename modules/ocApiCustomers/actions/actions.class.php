@@ -47,7 +47,7 @@ class ocApiCustomersActions extends apiActions
             'code' => ApiHttpStatus::SUCCESS,
             'message' => 'Verification successful',
             'success' => [
-                'customer' => $customers->getFormattedEntity($customers->getIdentifiedProfessional())
+                'customer' => $customers->getIdentifiedCustomer(),
             ],
         ]);
     }

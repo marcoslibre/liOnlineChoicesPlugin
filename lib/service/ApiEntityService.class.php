@@ -49,9 +49,9 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         foreach ( $this->getFieldsEquivalents() as $api => $db )
         {
             // case of "not implemented"  fields
-            if ( preg_match('/^null /', $db) === 1 )
+            if ( $db === NULL )
             {
-                $this->setResultValue(NULL, $api, $arr);
+                $arr = $this->setResultValue(NULL, $api, $arr);
                 continue;
             }
             
@@ -59,7 +59,7 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
             if ( strpos($db, '.') === false )
             {
                 $field = preg_replace('/^!/', '', $db);
-                $this->setResultValue(
+                $arr = $this->setResultValue(
                     $this->toggleBoolean($record->$field, $field != $db),
                     $api,
                     $arr);
@@ -76,7 +76,7 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
                 $rec = $rec->$entity;
             
             // find out the targeted property to render
-            $this->setResultValue(
+            $arr = $this->setResultValue(
                 $this->toggleBoolean($rec->$property, preg_match('/^!/', $db) === 1),
                 $api,
                 $arr

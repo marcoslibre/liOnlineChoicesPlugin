@@ -101,7 +101,7 @@ class ApiCustomersService extends ApiEntityService
             'city'          => 'Organism.city',
             'country'       => 'Organism.country',
             'phoneNumber'   => 'contact_number',
-            'datesOfBirth'  => 'null 1',
+            'datesOfBirth'  => NULL,
             'locale'        => 'Contact.culture',
             'uid'           => 'Contact.vcard_uid',
             'subscribedToNewsletter' => '!contact_email_no_newsletter',
