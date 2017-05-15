@@ -29,7 +29,7 @@ OcTicket:
       onDelete: CASCADE
       onUpdate: CASCADE
       foreignAlias: OcTickets
-    Price:
+    Gauge:
       onDelete: CASCADE
       onUpdate: CASCADE
       foreignAlias: OcTickets
