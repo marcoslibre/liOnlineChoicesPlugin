@@ -136,7 +136,7 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
         foreach ( $criterias as $criteria => $search )
         if ( isset($fields[$criteria]) && isset($search['value']) )
         {
-            $where   = $fields[$criteria].' ';
+            $field   = strpos('.', $fields[$criteria]) === false ? $q->getRootAlias().'.'.$fields[$criteria].' ' : $fields[$criteria].' ';
             $compare = $operands[$search['type']];
             $args    = [$search['value']];
             $dql     = '?';
@@ -153,7 +153,7 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
                 }
             }
             
-            $q->andWhere($fields[$criteria].' '.$compare[0].' '.$dql, $args);
+            $q->andWhere($field.' '.$compare[0].' '.$dql, $args);
         }
         
         return $q;

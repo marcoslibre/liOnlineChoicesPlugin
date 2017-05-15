@@ -39,14 +39,13 @@ abstract class apiActions extends jsonActions
             case 'POST':
                 // creates a resource
                 $response = $this->create($request);
-                $status = ApiHttpStatus::CREATED;
                 break;
             default:
                 $status = ApiHttpStatus::BAD_REQUEST;
-                $response = array('error');
+                $response = $this->createJsonResponse(['error'], $status);
         }
 
-        return $this->createJsonResponse($response, $status);
+        return $response;
     }
 
     /**
@@ -74,7 +73,7 @@ abstract class apiActions extends jsonActions
                 break;
             default:
                 $status = ApiHttpStatus::BAD_REQUEST;
-                $response = array('error');
+                $response = ['error'];
         }
 
         return $response;
@@ -95,7 +94,7 @@ abstract class apiActions extends jsonActions
         // requirements for do_action must be defined in route configuration
         // example: do_action: action1|action2|action3
         if ($this->actionRequirementsIsEmpty($request)) {
-            return $this->createJsonResponse(array('error')
+            return $this->createJsonResponse(['error']
                     , ApiHttpStatus::INTERNAL_SERVER_ERROR);
         }
 
@@ -107,7 +106,7 @@ abstract class apiActions extends jsonActions
             case 'DELETE':
             default:
                 $status = ApiHttpStatus::BAD_REQUEST;
-                $response = array('error');
+                $response = ['error'];
         }
 
         return $this->createJsonResponse($response, $status);
@@ -233,7 +232,7 @@ abstract class apiActions extends jsonActions
      * @param array $query  optional extra data to be merged with GET parameters
      * @return array
      */
-    protected function buildQuery(sfWebRequest $request, array $query = NULL)
+    protected function buildQuery(sfWebRequest $request, array $query = [])
     {
         $params = array_merge($query, $request->getGetParameters());
         return [

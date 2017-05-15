@@ -62,10 +62,10 @@ class ocApiCustomersActions extends apiActions
         $customers = $this->getService('customers_service');
         
         $pro = $customers->getIdentifiedProfessional();
-        if ( !$pro instanceof Professional )
-            return new ArrayObject;
-        
-        return $customers->getFormattedEntity($pro);
+        $result = !$pro instanceof Professional
+            ? new ArrayObject
+            : $customers->getFormattedEntity($pro);
+        return $this->createJsonResponse($result);
     }
 
     /**
@@ -78,16 +78,23 @@ class ocApiCustomersActions extends apiActions
     {
         $customers = $this->getService('customers_service');
         
+        if ( $customers->isIdentificated() && !$query['criteria'] )
+        {
+            $customer = $customers->getIdentifiedCustomer();
+            $query['criteria']['id']['value'] = $customer['id'];
+            $query['criteria']['id']['type']  = 'equal';
+            return $this->createJsonResponse($this->getListWithDecorator([$customer], $query));
+        }
+        
         // restricts access to customers collection to requests filtering on password and email
         if ( !$customers->isIdentificated() && !$query['criteria'] )
-            return $this->getListWithDecorator([], $query);
-        if (!( isset($query['criteria']['email']) && isset($query['criteria']['password']) ))
-            return $this->getListWithDecorator([], $query);
-        if (!( isset($query['criteria']['email']['value']) && isset($query['criteria']['password']['value']) ))
-            return $this->getListWithDecorator([], $query);
+            return $this->createJsonResponse($this->getListWithDecorator([], $query));
+        if (!( isset($query['criteria']['email']) && isset($query['criteria']['password'])
+            && isset($query['criteria']['email']['value']) && isset($query['criteria']['password']['value']) ))
+            return $this->createJsonResponse($this->getListWithDecorator([], $query));
         
         $customer = $customers->identify($query);
         
-        return $this->getListWithDecorator([$customers->getIdentifiedCustomer()], $query);
+        return $this->createJsonResponse($this->getListWithDecorator([$customers->getIdentifiedCustomer()], $query));
     }
 }
