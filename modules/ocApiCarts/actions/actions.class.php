@@ -20,7 +20,13 @@ class ocApiCartsActions extends apiActions
      */
     public function getOne(sfWebRequest $request)
     {
-        return array('message' => __METHOD__);
+        $cart_id = $request->getParameter('cart_id');
+
+        /* @var $cartService ApiCartsService */
+        $cartService = $this->getService('carts_service');
+        $result = $cartService->findOne($cart_id);
+
+        return $result;
     }
 
     /**
@@ -31,6 +37,37 @@ class ocApiCartsActions extends apiActions
      */
     public function getAll(sfWebRequest $request, array $query)
     {
-        return array('message' => __METHOD__);
+        /* @var $cartService ApiCartsService */
+        $cartService = $this->getService('carts_service');
+        $result = $cartService->findAll($query);
+
+        return $this->createJsonResponse($result);
+    }
+
+    /**
+     * 
+     * @param sfWebRequest $request
+     * @return array
+     */
+    public function delete(sfWebRequest $request)
+    {
+        $status = ApiHttpStatus::SUCCESS;
+        $message = ApiHttpMessage::DELETE_SUCCESSFUL;
+
+        $cart_id = $request->getParameter('cart_id');
+
+        /* @var $cartService ApiCartsService */
+        $cartService = $this->getService('carts_service');
+        $isSuccess = $cartService->deleteCart($cart_id);
+
+        if (!$isSuccess) {
+            $status = ApiHttpStatus::BAD_REQUEST;
+            $message = ApiHttpMessage::DELETE_FAILED;
+        }
+
+        return $this->createJsonResponse([
+                "code" => $status,
+                'message' => $message
+                ], $status);
     }
 }

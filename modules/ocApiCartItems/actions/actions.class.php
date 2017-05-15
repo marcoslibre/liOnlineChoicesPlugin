@@ -20,7 +20,14 @@ class ocApiCartItemsActions extends apiActions
      */
     public function getOne(sfWebRequest $request)
     {
-        return array('message' => __METHOD__);
+        $cart_id = $request->getParameter('cart_id');
+        $item_id = $request->getParameter('item_id');
+
+        /* @var $cartService ApiCartsService */
+        $cartService = $this->getService('cartitems_service');
+        $result = $cartService->findOne($cart_id, $item_id);
+
+        return $this->createJsonResponse($result);
     }
 
     /**
@@ -31,6 +38,67 @@ class ocApiCartItemsActions extends apiActions
      */
     public function getAll(sfWebRequest $request, array $query)
     {
-        return array('message' => __METHOD__);
+        $cart_id = $request->getParameter('cart_id');
+
+        /* @var $cartService ApiCartsService */
+        $cartService = $this->getService('cartitems_service');
+        $result = $cartService->findAll($cart_id, $query);
+
+        return $this->createJsonResponse($result);
+    }
+
+    /**
+     * 
+     * @param sfWebRequest $request
+     * @return array
+     */
+    public function update(sfWebRequest $request)
+    {
+        $status = ApiHttpStatus::SUCCESS;
+        $message = ApiHttpMessage::UPDATE_SUCCESSFUL;
+
+        $cart_id = $request->getParameter('cart_id');
+        $item_id = $request->getParameter('item_id');
+
+        /* @var $cartService ApiCartsService */
+        $cartService = $this->getService('cartitems_service');
+        $isSuccess = $cartService->updateCartItem($cart_id, $item_id);
+
+        if (!$isSuccess) {
+            $status = ApiHttpStatus::BAD_REQUEST;
+            $message = ApiHttpMessage::UPDATE_FAILED;
+        }
+
+        return $this->createJsonResponse([
+                "code" => $status,
+                'message' => $message
+                ], $status);
+    }
+
+    /**
+     * 
+     * @param sfWebRequest $request
+     * @return array
+     */
+    public function delete(sfWebRequest $request)
+    {
+        $status = ApiHttpStatus::SUCCESS;
+        $message = ApiHttpMessage::DELETE_SUCCESSFUL;
+
+        $cart_id = $request->getParameter('cart_id');
+        $item_id = $request->getParameter('item_id');
+
+        /* @var $cartService ApiCartsService */
+        $cartService = $this->getService('cartitems_service');
+        $isSuccess = $cartService->deleteCartItem($cart_id, $item_id);
+        if (!$isSuccess) {
+            $status = ApiHttpStatus::BAD_REQUEST;
+            $message = ApiHttpMessage::DELETE_FAILED;
+        }
+
+        return $this->createJsonResponse([
+                "code" => $status,
+                'message' => $message
+                ], $status);
     }
 }

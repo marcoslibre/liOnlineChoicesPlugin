@@ -15,4 +15,8 @@ all:
           arguments: ["@oauth_service"]
       manifestations_service:
           class: ApiManifestationsService
+      carts_service:
+          class: ApiCartsService
+      cartitems_service:
+          class: ApiCartItemsService
           

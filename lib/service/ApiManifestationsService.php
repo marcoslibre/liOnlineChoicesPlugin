@@ -33,11 +33,10 @@ class ApiManifestationsService extends ApiEntityService
      * 
      * @return array
      */
-    public function findAll()
+    public function findAll($query)
     {
-        $manifDotrineCol = $this->buildInitialQuery()
-            ->orderBy('root.happens_at, EventCategory.name')
-            ->execute();
+        $q = $this->buildQuery($query);
+        $manifDotrineCol = $q->execute();
 
         return $this->getFormattedEntities($manifDotrineCol);
     }
@@ -49,16 +48,15 @@ class ApiManifestationsService extends ApiEntityService
      */
     public function findOneById($manif_id)
     {
-        $manifDotrineCol = $this->buildInitialQuery()
-            ->orderBy('root.happens_at, EventCategory.name')
-            ->andWhere('root.id = ?', $manif_id)
-            ->execute();
+        $manifDotrineRec = $this->buildQuery(
+                ['criteria' => ['root.id' => $manif_id]])
+            ->fetchOne();
 
-        if ($manifDotrineCol->count() == 0) {
+        if (false === $manifDotrineRec) {
             return null;
         }
 
-        return $this->getFormattedEntity($manifDotrineCol->getFirst());
+        return $this->getFormattedEntity($manifDotrineRec);
     }
 
     public function buildInitialQuery()

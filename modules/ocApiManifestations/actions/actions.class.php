@@ -23,8 +23,8 @@ class ocApiManifestationsActions extends apiActions
     {
         /* @var $manifService ApiManifestationsService */
         $manifService = $this->getService('manifestations_service');
-        $result = $manifService->findAll();
+        $result = $manifService->findAll($query);
 
-        return $result;
+        return $this->createJsonResponse($result);
     }
 }
