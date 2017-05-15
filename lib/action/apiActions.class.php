@@ -77,7 +77,7 @@ abstract class apiActions extends jsonActions
                 $response = array('error');
         }
 
-        return $this->createJsonResponse($response, $status);
+        return $response;
     }
 
     /**
