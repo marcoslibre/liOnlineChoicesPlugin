@@ -13,21 +13,28 @@
  */
 abstract class jsonActions extends sfActions
 {
+
     /**
      * 
      */
     public function preExecute()
     {
+
         // to be tested only if the module "is_secure"
-        if ( $this->getSecurityValue('is_secure', false) )
-        {
+        if ( $this->getSecurityValue('is_secure', false) ) {
             /* @var $oauthService ApiAuthService */
             $oauthService = $this->getService('oauth_service');
-            
-            if ( !$oauthService->isAuthenticated($this->getRequest()) )
-            {
+
+            if ( !$oauthService->isAuthenticated($this->getRequest()) ) {
                 $this->getResponse()->setStatusCode(ApiHttpStatus::UNAUTHORIZED);
                 throw new sfException('Invalid authentication credentials');
+            }
+        }
+        $content = $this->getRequest()->getContent();
+        if ( $content ) {
+            $jsonParams = json_decode($content, true);
+            foreach ( $jsonParams as $k => $v ) {
+                $this->getRequest()->setParameter($k, $v);
             }
         }
 
@@ -46,13 +53,12 @@ abstract class jsonActions extends sfActions
     protected function createJsonResponse($data, $status = ApiHttpStatus::SUCCESS)
     {
         // type check
-        if ( !is_array($data) && ! $data instanceof ArrayAccess )
-        {
-            throw new liEvenementException('Argument 1 passed to jsonActions::createJsonResponse() must implement interface ArrayAccess or be an array, '.(is_object($data) ? get_class($data) : gettype($data)).' given.');
+        if ( !is_array($data) && !$data instanceof ArrayAccess ) {
+            throw new liEvenementException('Argument 1 passed to jsonActions::createJsonResponse() must implement interface ArrayAccess or be an array, ' . (is_object($data) ? get_class($data) : gettype($data)) . ' given.');
         }
-        
+
         $this->getResponse()->setStatusCode($status);
-        return $this->renderText(json_encode($data, JSON_PRETTY_PRINT)."\n");
+        return $this->renderText(json_encode($data, JSON_PRETTY_PRINT) . "\n");
     }
 
     /**
