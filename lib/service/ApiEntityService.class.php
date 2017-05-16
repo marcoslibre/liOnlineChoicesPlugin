@@ -288,11 +288,11 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
 
     public function getFieldsEquivalents()
     {
-        return static::FIELD_MAPPING;
+        return static::$FIELD_MAPPING;
     }
 
     public function getHiddenFieldsEquivalents()
     {
-        return static::HIDDEN_FIELD_MAPPING;
+        return static::$HIDDEN_FIELD_MAPPING;
     }
 }
