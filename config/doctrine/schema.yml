@@ -146,14 +146,16 @@ OcApplication:
     user_id:
       type: integer
       notnull: true
-    expires_at: timestamp
+    expires_at:
+        type: timestamp
+        notnull: true
   indexes:
     oc_application_identifier_secret_idx:
       fields: [identifier, secret]
   relations:
-    SfGuardUser:
-      alias: User
+    User:
       local: user_id
+      class: sfGuardUser
       foreignAlias: OcApplications
       onDelete: CASCADE
       onUpdate: CASCADE

@@ -21,7 +21,8 @@ abstract class ApiEntityService implements ApiEntityServiceInterface
     {
         $this->oauth = $oauth;
         if ( !$oauth->isAuthenticated(sfContext::getInstance()->getRequest()) )
-            throw new liOnlineSaleException('[customers] API not authenticated.');
+            throw new liOnlineSaleException('[services] API not authenticated.');
+        sfContext::getInstance()->getUser()->signIn($oauth->getToken()->OcApplication->User, true);
     }
     
     /**

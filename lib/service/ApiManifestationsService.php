@@ -36,9 +36,9 @@ class ApiManifestationsService extends ApiEntityService
     public function findAll($query)
     {
         $q = $this->buildQuery($query);
-        $manifDotrineCol = $q->execute();
+        $manifestations = $q->execute();
 
-        return $this->getFormattedEntities($manifDotrineCol);
+        return $this->getFormattedEntities($manifestations);
     }
 
     /**

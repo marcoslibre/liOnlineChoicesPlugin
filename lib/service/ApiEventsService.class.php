@@ -35,7 +35,7 @@ class ApiEventsService extends ApiEntityService
     public function buildInitialQuery()
     {
         return Doctrine::getTable('Event')->createQuery('root')
-            ->leftJoin('root.Manifestations m')
+            ->leftJoin('root.Manifestations Manifestations')
         ;
     }
     
@@ -53,8 +53,8 @@ class ApiEventsService extends ApiEntityService
         }
         
         // imageURL
-        sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-        $entity['imageURL'] = url_for('default/picture?id='.$entity['id']);
+        sfContext::getInstance()->getConfiguration()->loadHelpers(array('CrossAppLink'));
+        $entity['imageURL'] = cross_app_url_for('pub', 'picture/display?id='.$entity['id']);
         
         // manifestations
         $query = [
@@ -72,7 +72,7 @@ class ApiEventsService extends ApiEntityService
             'sorting'  => [],
             'page'     => 1,
         ];
-        $entity['manifestations'] = $this->manifestationsService->findAll($query)['_embedded']['items'];
+        //$entity['manifestations'] = $this->manifestationsService->findAll($query)['_embedded']['items'];
         // TODO (a call to ApiManifestationService may be a good idea)
         
         return $entity;
