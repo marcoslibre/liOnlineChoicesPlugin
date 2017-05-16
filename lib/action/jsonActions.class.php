@@ -30,8 +30,10 @@ abstract class jsonActions extends sfActions
                 throw new sfException('Invalid authentication credentials');
             }
         }
+        $contentType = $this->getRequest()->getContentType();
         $content = $this->getRequest()->getContent();
-        if ( $content ) {
+
+        if ( $contentType == 'application/json' && $content ) {
             $jsonParams = json_decode($content, true);
             foreach ( $jsonParams as $k => $v ) {
                 $this->getRequest()->setParameter($k, $v);
