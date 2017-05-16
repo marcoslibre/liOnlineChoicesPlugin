@@ -12,7 +12,7 @@
  */
 class ApiCustomersService extends ApiEntityService
 {
-    protected $FIELD_MAPPING = [
+    protected static $FIELD_MAPPING = [
         'id'            => 'id',
         'email'         => 'contact_email',
         'firstName'     => 'Contact.firstname',

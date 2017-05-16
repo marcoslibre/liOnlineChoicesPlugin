@@ -13,7 +13,7 @@
 class ApiCartsService extends ApiEntityService
 {
 
-    const FIELD_MAPPING = [
+    protected static $FIELD_MAPPING = [
         'id' => null,
         'type' => null,
         'quantity' => null,
@@ -79,10 +79,5 @@ class ApiCartsService extends ApiEntityService
     {
         return Doctrine_Query::create()
                 ->from('OcTransaction root');
-    }
-
-    public function getFieldsEquivalents()
-    {
-        return static::FIELD_MAPPING;
     }
 }
