@@ -13,7 +13,7 @@
 class ApiManifestationsService extends ApiEntityService
 {
 
-    protected $FIELD_MAPPING = [
+    protected static $FIELD_MAPPING = [
         'id' => 'id',
         'startsAt' => 'happens_at',
         'endsAt' => 'ends_at',

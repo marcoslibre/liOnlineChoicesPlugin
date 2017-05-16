@@ -12,7 +12,7 @@
  */
 class ApiEventsService extends ApiEntityService
 {
-    protected $FIELD_MAPPING = [
+    protected static $FIELD_MAPPING = [
         'id'            => 'id',
         'metaEvent.id'  => 'MetaEvent.id',
         'metaEvent.translations' => 'MetaEvent.Translation',

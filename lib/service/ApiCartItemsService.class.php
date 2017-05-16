@@ -13,7 +13,7 @@
 class ApiCartsService extends ApiEntityService
 {
 
-    const FIELD_MAPPING = [];
+     protected static $FIELD_MAPPING = [];
 
     /**
      * 
